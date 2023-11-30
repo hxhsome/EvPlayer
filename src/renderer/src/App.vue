@@ -3,6 +3,7 @@ import { ref, nextTick } from 'vue'
 import TitleBar from './components/TitleBar.vue'
 import Player from './components/Player.vue'
 import GuacamolePlayer from './components/GuacamolePlayer.vue'
+import WebdbPlayer from './components/WebdbPlayer.vue'
 import Playlist from './components/Playlist.vue'
 import useIpcRendererOn from './hook/useIpcRendererOn'
 import { getVideoInfoList } from './utils/video'
@@ -28,10 +29,14 @@ const playVideo = (video: VideoInfo): void => {
   })
 }
 
+const webdbPlayer = ref<InstanceType<typeof WebdbPlayer> | null>(null)
 const playWebdb = (video: VideoInfo): void => {
   playType.value = 'webdb'
   videoName.value = video.name
   console.log('playWebdb', video)
+  nextTick(() => {
+    webdbPlayer.value?.play(video)
+  })
 }
 
 const guacPlayer = ref<InstanceType<typeof GuacamolePlayer> | null>(null)
@@ -61,7 +66,8 @@ useIpcRendererOn(IpcEvents.EV_PAUSE, () => {
 <template>
   <TitleBar :title="videoName" @toggle-playlist="togglePlaylist"></TitleBar>
   <div class="main">
-    <p v-if="playType === 'webdb'">webdb</p>
+    <!-- <p v-if="playType === 'webdb'">webdb</p> -->
+    <webdb-player v-if="playType === 'webdb'" ref="webdbPlayer"></webdb-player>
     <guacamole-player v-else-if="playType === 'guacamole'" ref="guacPlayer"></guacamole-player>
     <Player v-else ref="player"></Player>
     <Playlist ref="playlist" @click="playVideo" @playWebdb="playWebdb" @playGuacd="playGuacd">

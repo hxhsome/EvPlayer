@@ -1,6 +1,6 @@
 import { ipcMain, BrowserWindow, dialog } from 'electron'
 import { store } from './store'
-import { saveBase64Image } from './fs'
+import { saveBase64Image, readFile } from './fs'
 import { setWindowJumpList, setMacOSRecentDocuments } from './history'
 import { getVideoFromPath, getVideoExtensions } from './utils'
 import { VideoFile, VideoInfo } from '../common/types'
@@ -23,10 +23,15 @@ const register = (): void => {
           re.filePaths.forEach((p) => {
             const file = getVideoFromPath(p)
             console.log('ipc-file', file)
+            const readFileRes = readFile(file)
+            console.log('readFileRes', readFileRes.substring(0, 100))
             if (file) videoFiles.push(file)
           })
           e.sender.send(IpcEvents.EV_PLAY, videoFiles)
         }
+      })
+      .catch((err) => {
+        console.error(err)
       })
   })
 

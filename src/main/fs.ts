@@ -19,3 +19,11 @@ export const saveBase64Image = (data: string): string => {
     return ''
   }
 }
+
+export const readFile = (video): string => {
+  try {
+    return fs.readFileSync(video?.path, 'utf-8')
+  } catch {
+    return 'error'
+  }
+}

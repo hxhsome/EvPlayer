@@ -4,3 +4,4 @@ out
 *.log*
 .history
 .vscode
+package-lock.json
