@@ -23,8 +23,9 @@ const register = (): void => {
           re.filePaths.forEach((p) => {
             const file = getVideoFromPath(p)
             console.log('ipc-file', file)
-            const readFileRes = readFile(file)
-            console.log('readFileRes', readFileRes.substring(0, 100))
+            // const readFileRes = readFile(file)
+            // console.log('readFileRes', readFileRes.substring(0, 100))
+            if (file?.path.endsWith('.webdb')) file.data = readFile(file)
             if (file) videoFiles.push(file)
           })
           e.sender.send(IpcEvents.EV_PLAY, videoFiles)
